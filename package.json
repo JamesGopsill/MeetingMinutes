@@ -1,0 +1,21 @@
+{
+  "name": "MinuteTaker",
+  "version": "1.0.0",
+  "description": "Quick and easy recording of minutes in your meetings",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "James Gopsill",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.6.4",
+    "docxtemplater": "^3.1.3",
+    "file-saver": "^1.3.3",
+    "jszip": "^2.6.1",
+    "jszip-utils": "0.0.2",
+    "moment": "^2.18.1",
+    "xlsx": "^0.10.6"
+  }
+}

@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Meeting Minutes</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+
+  <style type="text/css">
+    @import url('https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700');
+    * {
+      font-family: 'Quicksand', sans-serif;
+    }
+    .tab-pane {
+      padding-top: 10px;
+    }
+    .consult-link {
+      margin-top: 10px;
+    }
+  </style>
+  <script src="bundle.js"></script>
+</head>
+<body>
+<div class="container" ng-controller="myController">
+
+<p class="pull-right consult-link"><a href="contact.html">Want your own custom meeting minute tool?</a></p>
+<h2>Meeting Minutes <small>A lightweight meeting minute tool</small></h2>
+<hr>
+
+<ul class="nav nav-tabs" role="tablist">
+  <li role="presentation" class="active"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Meeting Information <span class="glyphicon glyphicon-info-sign"></span></a></li>
+  <li role="presentation"><a href="#minutes" aria-controls="minutes" role="tab" data-toggle="tab">Minutes <span class="glyphicon glyphicon-pencil"></span></a></li>
+  <li role="presentation"><a href="#download" aria-controls="download" role="tab" data-toggle="tab">Download <span class="glyphicon glyphicon-download-alt"></span></a></li>
+</ul>
+
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane fade in active" id="info">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Meeting Information</h3>
+      </div>
+      <div class="panel-body">
+        <div class="input-group form-group">
+          <span class="input-group-addon">Title</span>
+          <input type="text" class="form-control" ng-model="title">
+        </div>
+        <hr>
+        <form ng-submit="addAttendee()">
+          <div class="input-group form-group">
+            <span class="input-group-addon">Attendees</span>
+            <input type="text" class="form-control" ng-model="attendeesName">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="submit">Add</button>
+            </span>
+          </div>
+        </form>
+        <ul class="list-inline">
+          <li ng-repeat="attendee in attendees"><span class="label label-primary">{{attendee}} <span class="glyphicon glyphicon-remove" ng-click="removeAttendee($index)"></span></span></li>
+        </ul>
+        <hr>
+        <form ng-submit="addApology()">
+          <div class="input-group form-group">
+            <span class="input-group-addon">Apologies</span>
+            <input type="text" class="form-control" ng-model="apologiesName">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="submit">Add</button>
+            </span>
+          </div>
+        </form>
+        <ul class="list-inline">
+          <li ng-repeat="apology in apologies"><span class="label label-primary">{{apology}} <span class="glyphicon glyphicon-remove" ng-click="removeApology($index)"></span></span></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <div role="tabpanel" class="tab-pane fade" id="minutes">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <form ng-submit="addMinute()">
+          <div class="form-group">
+            <p><strong>Person</strong></p>
+            <label class="radio-inline">
+              <input type="radio" name="person" ng-click="updateMinuteName()" ng-model="minuteName" value="n/a"> n/a
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="person" ng-click="updateMinuteName()" ng-model="minuteName" value="All"> All
+            </label>
+            <label class="radio-inline" ng-repeat="attendee in attendees">
+              <input type="radio" name="person" ng-click="updateMinuteName('{{attendee}}')" ng-model="minuteName" value="{{attendee}}"> {{attendee}}
+            </label>
+          </div>
+          <div class="form-group">
+            <p><strong>Type</strong></p>
+            <label class="radio-inline">
+              <input type="radio" name="type" ng-model="minuteType" value="n/a"> n/a
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="type" ng-model="minuteType" value="Comment"> Comment
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="type" ng-model="minuteType" value="Section"> Section
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="type" ng-model="minuteType" value="Action"> Action
+            </label>
+          </div>
+          <hr>
+          <div class="input-group form-group">
+            <span class="input-group-addon">Comment</span>
+            <input type="text" class="form-control" ng-model="minuteText">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="submit">Add</button>
+            </span>
+          </div>
+        </form>
+      </div>
+      <div class="panel-body">
+        <table class="table table-bordered table-condensed table-striped">
+          <tr>
+            <th width="15%">Date</th>
+            <th width="20%">Name</th>
+            <th width="10%">Type</th>
+            <th width="55%">Comment</th>
+          </tr>
+          <tr ng-repeat="minute in minutes">
+            <td>{{minute.date}}</td>
+            <td>{{minute.name}}</td>
+            <td>{{minute.type}}</td>
+            <td>{{minute.minute}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <div role="tabpanel" class="tab-pane fade" id="download">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Download Minutes (.xlsx)</h3>
+      </div>
+      <div class="panel-body text-center">
+        <button class="btn btn-primary" ng-click="downloadDOCX()">Download .docx <span class="glyphicon glyphicon-download-alt"></span></button>
+        <button class="btn btn-primary" ng-click="downloadXLSX()">Download .xlsx <span class="glyphicon glyphicon-download-alt"></span></button>
+      </div>
+    </div>
+
+  </div>
+</div> <!-- ./tab-panl -->
+
+
+<footer>
+  <hr>
+  <!-- <p class="text-muted">Created By James Gopsill</p> -->
+  <p class="text-muted text-center"><i class="fa fa-code" aria-hidden="true"></i> Est. 2016 <i class="fa fa-html5" aria-hidden="true"></i> <i class="fa fa-css3" aria-hidden="true"></i></p>
+  <p class="text-muted text-center">Built using Angular, Node, Bootstrap, FontAwesome and GitHub</p>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+</div> <!-- ./container -->
+</body>
+</html>
